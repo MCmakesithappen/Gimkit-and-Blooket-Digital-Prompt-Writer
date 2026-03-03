@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NC Standards Game Prompt Writer | Gimkit & Blooket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:   #0b1a2e;
+      --navy2:  #112240;
+      --red:    #c41e3a;
+      --gold:   #ffd700;
+      --gold2:  #ffaa00;
+      --cyan:   #00d4ff;
+      --orange: #ff6b35;
+      --text:   #e8f4fd;
+      --muted:  #7a9ab8;
+      --card:   rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #0d1f3c 100%);
+      min-height: 100vh;
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(90deg, #8b0000, var(--red), #8b0000);
+      border-bottom: 4px solid var(--gold);
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 4px 24px rgba(196,30,58,.45);
+    }
+    header .emoji { font-size: 44px; }
+    header .badge { font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; font-weight: 800; }
+    header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: #fff; letter-spacing: 2px; line-height: 1; }
+    header .sub { font-size: 13px; color: #ffb3b3; font-weight: 600; }
+    header .conf { margin-left: auto; text-align: right; font-size: 11px; color: var(--gold); letter-spacing: 2px; font-weight: 800; }
+
+    /* ── LAYOUT ── */
+    main { max-width: 940px; margin: 0 auto; padding: 36px 20px 60px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,215,0,.25);
+      border-radius: 18px;
+      padding: 32px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 40px rgba(0,0,0,.35);
+    }
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    /* ── FORM GRID ── */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media(max-width:600px){ .grid2 { grid-template-columns: 1fr; } }
+
+    label.field-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Nunito', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+    }
+    select:focus, input[type="text"]:focus { border-color: var(--gold); }
+    select option { background: #112240; }
+
+    input[type="range"] {
+      width: 100%;
+      margin-top: 8px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+    .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: #445; margin-top: 4px; font-weight: 700; }
+
+    /* ── PLATFORM PILLS ── */
+    .pill-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+    .pill {
+      flex: 1; min-width: 120px;
+      padding: 12px 10px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+    }
+    .pill .pill-sub { font-size: 11px; font-weight: 600; opacity: .7; margin-top: 2px; }
+    .pill.active { border-color: var(--gold); background: rgba(255,215,0,.13); color: var(--gold); }
+
+    /* ── GENERATE BUTTON ── */
+    #generateBtn {
+      width: 100%;
+      padding: 17px;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      border: none;
+      border-radius: 12px;
+      color: #0b1a2e;
+      font-size: 16px;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255,215,0,.4);
+      transition: transform .15s, box-shadow .15s;
+    }
+    #generateBtn:hover { transform: translateY(-2px); box-shadow: 0 7px 28px rgba(255,215,0,.5); }
+    #generateBtn:disabled { background: rgba(255,215,0,.25); color: rgba(255,215,0,.5); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── STATUS / ERROR ── */
+    #statusMsg {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+      display: none;
+    }
+    #statusMsg.visible { display: block; }
+    #statusMsg .spin { display: inline-block; animation: spin 1s linear infinite; font-size: 22px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-box {
+      background: rgba(255,100,100,.12);
+      border: 1px solid #ff6b6b;
+      border-radius: 9px;
+      padding: 12px 16px;
+      color: #ff9999;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .error-box.visible { display: block; }
+
+    /* ── RESULTS ── */
+    #results { display: none; margin-top: 28px; }
+    #results.visible { display: block; }
+
+    .results-header {
+      background: rgba(255,215,0,.1);
+      border: 2px solid rgba(255,215,0,.4);
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .results-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--gold); letter-spacing: 2px; }
+    .results-header .meta { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+    .dl-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .dl-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: .5px;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .dl-btn:hover { transform: translateY(-1px); }
+    .dl-btn-cyan  { background: rgba(0,212,255,.12); border: 2px solid var(--cyan);   color: var(--cyan); }
+    .dl-btn-orange{ background: rgba(255,107,53,.12); border: 2px solid var(--orange); color: var(--orange); }
+    .dl-btn-ghost { background: transparent; border: 2px solid var(--muted); color: var(--muted); }
+
+    /* ── QUESTION LIST ── */
+    #questionList {
+      background: rgba(255,255,255,.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    #questionList h3 { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--gold); margin-bottom: 18px; }
+    .q-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+      animation: fadeIn .3s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+    .q-text { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 10px; }
+    .q-num  { color: var(--gold); margin-right: 7px; }
+    .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    @media(max-width:480px){ .answers { grid-template-columns: 1fr; } }
+    .ans {
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.07);
+      color: var(--muted);
+    }
+    .ans.correct {
+      background: rgba(0,255,128,.12);
+      border-color: rgba(0,255,128,.35);
+      color: #7fffb4;
+    }
+
+    /* ── UPLOAD GUIDES ── */
+    .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+    @media(max-width:600px){ .guide-grid { grid-template-columns: 1fr; } }
+    .guide-card { border-radius: 12px; padding: 16px; }
+    .guide-card.cyan   { background: rgba(0,212,255,.07); border: 1px solid rgba(0,212,255,.2); }
+    .guide-card.orange { background: rgba(255,107,53,.07); border: 1px solid rgba(255,107,53,.2); }
+    .guide-card h4 { font-size: 13px; font-weight: 800; margin-bottom: 10px; }
+    .guide-card.cyan h4   { color: var(--cyan); }
+    .guide-card.orange h4 { color: var(--orange); }
+    .guide-card ol { padding-left: 18px; color: var(--muted); font-size: 12px; font-weight: 600; line-height: 1.9; }
+
+    /* ── INFO CARDS ── */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
+    @media(max-width:600px){ .info-grid { grid-template-columns: 1fr; } }
+    .info-card { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .info-card .icon { font-size: 20px; margin-bottom: 6px; }
+    .info-card h4 { font-size: 13px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+    .info-card p  { font-size: 12px; color: var(--muted); line-height: 1.55; font-weight: 600; }
+
+    /* ── API KEY BANNER ── */
+    #apiSetup {
+      background: rgba(255,215,0,.08);
+      border: 2px solid rgba(255,215,0,.35);
+      border-radius: 14px;
+      padding: 22px 28px;
+      margin-bottom: 28px;
+    }
+    #apiSetup h3 { color: var(--gold); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
+    #apiSetup p  { color: var(--muted); font-size: 13px; font-weight: 600; margin-bottom: 14px; line-height: 1.6; }
+    #apiSetup .key-row { display: flex; gap: 10px; }
+    #apiKeyInput {
+      flex: 1;
+      padding: 11px 14px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: monospace;
+      outline: none;
+    }
+    #apiKeyInput:focus { border-color: var(--gold); }
+    #saveKeyBtn {
+      padding: 11px 22px;
+      background: var(--gold);
+      border: none;
+      border-radius: 9px;
+      color: #0b1a2e;
+      font-weight: 800;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #keyStatus { font-size: 12px; margin-top: 8px; color: #7fffb4; font-weight: 700; display: none; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,.04); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,215,0,.3); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="emoji">🎮</div>
+  <div>
+    <div class="badge">NC Standards-Aligned</div>
+    <h1>Game Prompt Writer</h1>
+    <div class="sub">Gimkit &amp; Blooket &nbsp;·&nbsp; Grades 6–12 &nbsp;·&nbsp; All Content Areas</div>
+  </div>
+  <div class="conf">NCTIES CONFERENCE<br><span style="color:#fff;font-size:13px;">Game On! 🎯</span></div>
+</header>
+
+<main>
+
+  <!-- API Key Setup -->
+  <div id="apiSetup">
+    <h3>🔑 Enter Your Anthropic API Key</h3>
+    <p>This tool uses the Claude AI API to generate NC Standards-aligned questions. Your key is stored only in your browser session and never sent anywhere except directly to Anthropic's API.</p>
+    <div class="key-row">
+      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" />
+      <button id="saveKeyBtn" onclick="saveKey()">Save Key</button>
+    </div>
+    <div id="keyStatus">✅ API key saved! You can now generate questions.</div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card">
+    <div class="card-title">⚙️ Configure Your Game Set</div>
+
+    <div class="grid2">
+      <div>
+        <label class="field-label">Grade Level</label>
+        <select id="grade">
+          <option>6</option><option>7</option><option selected>8</option>
+          <option>9</option><option>10</option><option>11</option><option>12</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Content Area</label>
+        <select id="subject">
+          <option>English Language Arts</option>
+          <option>Mathematics</option>
+          <option>Science</option>
+          <option selected>Social Studies</option>
+          <option>Health &amp; PE</option>
+          <option>Arts Education</option>
+          <option>Computer Science &amp; Digital Literacy</option>
+          <option>World Languages</option>
+          <option>Career &amp; Technical Education</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Difficulty Level</label>
+        <select id="difficulty">
+          <option>Standard</option>
+          <option>Honors / Advanced</option>
+          <option>EOC / EOG Prep</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Number of Questions: <span id="countDisplay" style="color:var(--gold)">20</span></label>
+        <input type="range" id="questionCount" min="5" max="40" step="5" value="20"
+          oninput="document.getElementById('countDisplay').textContent=this.value" />
+        <div class="range-labels">
+          <span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span><span>35</span><span>40</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px">
+      <label class="field-label">Topic, Standard, or Unit Focus <span style="color:#ff6b6b">*</span></label>
+      <input type="text" id="topic"
+        placeholder="e.g. NC Standard 8.H.2 – European Exploration, Pythagorean Theorem, Cell Division…" />
+    </div>
+
+    <div style="margin-bottom:28px">
+      <label class="field-label">Export Format</label>
+      <div class="pill-row" id="pillRow">
+        <div class="pill active" data-val="both"    onclick="selectPill(this)">🎮 Both Platforms<div class="pill-sub">Gimkit + Blooket</div></div>
+        <div class="pill"        data-val="gimkit"  onclick="selectPill(this)">⚡ Gimkit Only<div class="pill-sub">4-column CSV</div></div>
+        <div class="pill"        data-val="blooket" onclick="selectPill(this)">📚 Blooket Only<div class="pill-sub">7-column CSV</div></div>
+      </div>
+    </div>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <button id="generateBtn" onclick="generate()">✨ Generate Game Questions</button>
+
+    <div id="statusMsg">
+      <div class="spin">⚙️</div>
+      <div id="statusText" style="margin-top:8px"></div>
+      <div style="font-size:11px;color:#445;margin-top:4px">Aligning to NC Standard Course of Study · Building smart distractors · Randomizing answers</div>
+    </div>
+  </div>
+
+  <!-- Info Cards -->
+  <div class="info-grid">
+    <div class="info-card"><div class="icon">⚡</div><h4>Gimkit CSV Format</h4><p>Question, Correct Answer, 3 Wrong Answers — import directly in Gimkit's "Import Questions" feature.</p></div>
+    <div class="info-card"><div class="icon">📚</div><h4>Blooket CSV Format</h4><p>Question with 4 shuffled answers and correct position marked — perfect for Blooket's question import.</p></div>
+    <div class="info-card"><div class="icon">🎲</div><h4>Randomized Answers</h4><p>All answer choices are automatically shuffled so correct answers appear in varied positions every time.</p></div>
+    <div class="info-card"><div class="icon">🎯</div><h4>NC Standards Aligned</h4><p>Every question is crafted to the NC Standard Course of Study for your selected grade and content area.</p></div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="results-header">
+      <div>
+        <h2 id="resultsTitle">✅ 0 Questions Generated!</h2>
+        <div class="meta" id="resultsMeta"></div>
+      </div>
+      <div class="dl-row" id="dlButtons"></div>
+    </div>
+    <div id="questionList"><h3>📋 Question Preview</h3></div>
+    <div class="guide-grid" id="guideGrid"></div>
+  </div>
+
+</main>
+
+<script>
+  // ── STATE ──────────────────────────────────────────────
+  let apiKey = '';
+  let generatedQuestions = [];
+  let selectedPlatform = 'both';
+  let currentMeta = {};
+
+  // ── API KEY ────────────────────────────────────────────
+  function saveKey() {
+    const val = document.getElementById('apiKeyInput').value.trim();
+    if (!val.startsWith('sk-ant')) {
+      showError('That does not look like a valid Anthropic API key (should start with sk-ant).');
+      return;
+    }
+    apiKey = val;
+    document.getElementById('keyStatus').style.display = 'block';
+    document.getElementById('keyStatus').textContent = '✅ API key saved! You can now generate questions.';
+  }
+
+  // ── PLATFORM PILLS ────────────────────────────────────
+  function selectPill(el) {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    selectedPlatform = el.dataset.val;
+  }
+
+  // ── HELPERS ───────────────────────────────────────────
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorBox');
+    el.textContent = '⚠️ ' + msg;
+    el.classList.add('visible');
+  }
+  function clearError() {
+    const el = document.getElementById('errorBox');
+    el.textContent = '';
+    el.classList.remove('visible');
+  }
+
+  function setLoading(on, text) {
+    const btn = document.getElementById('generateBtn');
+    const msg = document.getElementById('statusMsg');
+    btn.disabled = on;
+    msg.classList.toggle('visible', on);
+    if (text) document.getElementById('statusText').textContent = text;
+  }
+
+  // ── PARSE ─────────────────────────────────────────────
+  function parseQuestions(text) {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    const questions = [];
+    let cur = null;
+    for (const line of lines) {
+      const qm = line.match(/^\d+[\.\)]\s+(.+)/);
+      const am = line.match(/^(?:Answer|Correct Answer):\s*(.+)/i);
+      const wm = line.match(/^(?:Wrong\d?|Incorrect\d?|Distractor\d?):\s*(.+)/i);
+      if (qm) {
+        if (cur) questions.push(cur);
+        cur = { question: qm[1], correct: '', wrong: [] };
+      } else if (am && cur) {
+        cur.correct = am[1];
+      } else if (wm && cur) {
+        cur.wrong.push(wm[1]);
+      }
+    }
+    if (cur) questions.push(cur);
+    return questions.filter(q => q.question && q.correct && q.wrong.length >= 3);
+  }
+
+  // ── CSV EXPORT ────────────────────────────────────────
+  function esc(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
+
+  function makeGimkitCSV(questions) {
+    const rows = ['Question,Answer,"Incorrect Answer 1","Incorrect Answer 2","Incorrect Answer 3"'];
+    for (const q of questions) {
+      const w = shuffle(q.wrong).slice(0, 3);
+      while (w.length < 3) w.push('N/A');
+      rows.push([q.question, q.correct, w[0], w[1], w[2]].map(esc).join(','));
+    }
+    return rows.join('\n');
+  }
+
+  function makeBlooketCSV(questions) {
+    const rows = ['"Question Text","Answer 1","Answer 2","Answer 3","Answer 4","Time Limit (sec)","Correct Answer(s)"'];
+    for (const q of questions) {
+      const w = shuffle(q.wrong).slice(0, 3);
+      const all = shuffle([q.correct, w[0], w[1], w[2]]);
+      const correctPos = all.indexOf(q.correct) + 1;
+      rows.push([q.question, all[0], all[1], all[2], all[3], '20', correctPos].map(esc).join(','));
+    }
+    return rows.join('\n');
+  }
+
+  function downloadCSV(content, filename) {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function safeName(s) { return s.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 30); }
+
+  // ── RENDER RESULTS ────────────────────────────────────
+  function renderResults(questions, meta) {
+    document.getElementById('resultsTitle').textContent =
+      '✅ ' + questions.length + ' Questions Generated!';
+    document.getElementById('resultsMeta').textContent =
+      'Grade ' + meta.grade + ' · ' + meta.subject + ' · ' + meta.topic + ' · ' + meta.difficulty;
+
+    // Download buttons
+    const dlRow = document.getElementById('dlButtons');
+    dlRow.innerHTML = '';
+    if (selectedPlatform === 'both' || selectedPlatform === 'gimkit') {
+      const b = document.createElement('button');
+      b.className = 'dl-btn dl-btn-cyan';
+      b.textContent = '⚡ Download Gimkit CSV';
+      b.onclick = () => downloadCSV(makeGimkitCSV(questions),
+        'NC_' + safeName(meta.subject) + '_Gr' + meta.grade + '_' + safeName(meta.topic) + '_gimkit.csv');
+      dlRow.appendChild(b);
+    }
+    if (selectedPlatform === 'both' || selectedPlatform === 'blooket') {
+      const b = document.createElement('button');
+      b.className = 'dl-btn dl-btn-orange';
+      b.textContent = '📚 Download Blooket CSV';
+      b.onclick = () => downloadCSV(makeBlooketCSV(questions),
+        'NC_' + safeName(meta.subject) + '_Gr' + meta.grade + '_' + safeName(meta.topic) + '_blooket.csv');
+      dlRow.appendChild(b);
+    }
+    const newBtn = document.createElement('button');
+    newBtn.className = 'dl-btn dl-btn-ghost';
+    newBtn.textContent = '🔄 New Set';
+    newBtn.onclick = () => {
+      document.getElementById('results').classList.remove('visible');
+      generatedQuestions = [];
+    };
+    dlRow.appendChild(newBtn);
+
+    // Question cards
+    const list = document.getElementById('questionList');
+    list.innerHTML = '<h3>📋 Question Preview</h3>';
+    questions.forEach((q, i) => {
+      const all = shuffle([q.correct, ...q.wrong.slice(0, 3)]);
+      const labels = ['A', 'B', 'C', 'D'];
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.innerHTML = `
+        <div class="q-text"><span class="q-num">${i + 1}.</span>${q.question}</div>
+        <div class="answers">
+          ${all.map((ans, ai) =>
+            `<div class="ans${ans === q.correct ? ' correct' : ''}">
+              ${labels[ai]}. ${ans}${ans === q.correct ? ' ✓' : ''}
+            </div>`
+          ).join('')}
+        </div>`;
+      list.appendChild(card);
+    });
+
+    // Upload guides
+    const guideGrid = document.getElementById('guideGrid');
+    guideGrid.innerHTML = '';
+    if (selectedPlatform === 'both' || selectedPlatform === 'gimkit') {
+      guideGrid.innerHTML += `
+        <div class="guide-card cyan">
+          <h4>⚡ Upload to Gimkit</h4>
+          <ol>
+            <li>Go to gimkit.com → Create Kit</li>
+            <li>Click "Import" → "CSV"</li>
+            <li>Upload your Gimkit CSV file</li>
+            <li>Map columns if prompted → Import!</li>
+          </ol>
+        </div>`;
+    }
+    if (selectedPlatform === 'both' || selectedPlatform === 'blooket') {
+      guideGrid.innerHTML += `
+        <div class="guide-card orange">
+          <h4>📚 Upload to Blooket</h4>
+          <ol>
+            <li>Go to blooket.com → Create Set</li>
+            <li>Click "Import" → select CSV file</li>
+            <li>Upload your Blooket CSV file</li>
+            <li>Preview questions → Save Set!</li>
+          </ol>
+        </div>`;
+    }
+
+    document.getElementById('results').classList.add('visible');
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ── GENERATE ──────────────────────────────────────────
+  const STANDARDS_CONTEXT = {
+    'English Language Arts': 'NC ELA Essential Standards: reading literature, informational text, writing, speaking & listening, language standards aligned to NC Standard Course of Study.',
+    'Mathematics': 'NC Mathematics Standard Course of Study: Number & Quantity, Algebra, Functions, Geometry, Statistics & Probability for middle and high school.',
+    'Science': 'NC Essential Science Standards: Earth & Environmental Science, Biology, Chemistry, Physics, Physical Science aligned to NC Standard Course of Study.',
+    'Social Studies': 'NC Essential Standards for Social Studies: NC History, American History, World History, Civics & Economics, Geography.',
+    'Health & PE': 'NC Essential Standards for Health and PE: Healthful Living, movement competency, personal/community health.',
+    'Arts Education': 'NC Essential Standards for Arts Education: Visual Arts, Music, Theater Arts, and Dance.',
+    'Computer Science & Digital Literacy': 'NC Essential Standards for CS and Digital Learning: computational thinking, programming concepts, digital citizenship.',
+    'World Languages': 'NC Essential Standards for World Languages aligned to ACTFL proficiency levels: interpretive, interpersonal, presentational communication.',
+    'Career & Technical Education': 'NC CTE Standards covering pathways: Business & Finance, Health Science, STEM, Arts & Communications, and more.',
+  };
+
+  async function generate() {
+    clearError();
+    const grade   = document.getElementById('grade').value;
+    const subject = document.getElementById('subject').value;
+    const topic   = document.getElementById('topic').value.trim();
+    const diff    = document.getElementById('difficulty').value;
+    const count   = document.getElementById('questionCount').value;
+
+    if (!apiKey) { showError('Please enter and save your Anthropic API key above first.'); return; }
+    if (!topic)  { showError('Please enter a topic or standard to focus on.'); return; }
+
+    setLoading(true, `Creating ${count} questions for Grade ${grade} ${subject}…`);
+    document.getElementById('results').classList.remove('visible');
+
+    const prompt = `You are an expert NC educator creating quiz questions aligned to the NC Standard Course of Study.
+
+Generate exactly ${count} multiple-choice questions for:
+- Grade: ${grade}
+- Subject: ${subject}
+- Topic/Standard Focus: ${topic}
+- Difficulty: ${diff}
+- Standards Context: ${STANDARDS_CONTEXT[subject] || 'NC Standard Course of Study'}
+
+REQUIREMENTS:
+- Questions must be clearly aligned to NC standards
+- Mix of recall, application, and analysis questions
+- Each question needs 1 correct answer and exactly 3 plausible distractors (realistic misconceptions, NOT obviously wrong)
+- Use age-appropriate language for grade ${grade}
+- Calibrate rigor for ${diff} level
+
+FORMAT EVERY QUESTION EXACTLY LIKE THIS with no extra commentary:
+1. [Question text]
+Answer: [Correct answer]
+Wrong1: [Plausible distractor]
+Wrong2: [Plausible distractor]
+Wrong3: [Plausible distractor]
+
+Continue this exact format for all ${count} questions.`;
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-5',
+          max_tokens: 8000,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error?.message || 'API request failed (status ' + resp.status + ')');
+      }
+
+      const data = await resp.json();
+      const text = (data.content || []).map(c => c.text || '').join('\n');
+      const questions = parseQuestions(text);
+
+      if (questions.length === 0) {
+        throw new Error('Could not parse questions from the AI response. Please try again.');
+      }
+
+      generatedQuestions = questions;
+      currentMeta = { grade, subject, topic, difficulty: diff };
+      renderResults(questions, currentMeta);
+
+    } catch (err) {
+      showError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+</script>
+</body>
+</html>
