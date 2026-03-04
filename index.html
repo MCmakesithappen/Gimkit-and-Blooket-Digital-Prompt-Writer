@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NC Standards Game Prompt Writer | Gimkit & Blooket</title>
+  <title>NC Standards Quiz Generator | Gimkit & Blooket</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -14,6 +14,7 @@
       --gold2:  #ffaa00;
       --cyan:   #00d4ff;
       --orange: #ff6b35;
+      --green:  #00c97a;
       --text:   #e8f4fd;
       --muted:  #7a9ab8;
       --card:   rgba(255,255,255,0.05);
@@ -27,7 +28,6 @@
       color: var(--text);
     }
 
-    /* ── HEADER ── */
     header {
       background: linear-gradient(90deg, #8b0000, var(--red), #8b0000);
       border-bottom: 4px solid var(--gold);
@@ -37,23 +37,45 @@
       gap: 16px;
       box-shadow: 0 4px 24px rgba(196,30,58,.45);
     }
-    header .emoji { font-size: 44px; }
-    header .badge { font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; font-weight: 800; }
+    .h-emoji { font-size: 44px; }
+    .h-badge { font-size: 10px; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; font-weight: 800; }
     header h1 { font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: #fff; letter-spacing: 2px; line-height: 1; }
-    header .sub { font-size: 13px; color: #ffb3b3; font-weight: 600; }
-    header .conf { margin-left: auto; text-align: right; font-size: 11px; color: var(--gold); letter-spacing: 2px; font-weight: 800; }
+    .h-sub { font-size: 13px; color: #ffb3b3; font-weight: 600; }
+    .h-conf { margin-left: auto; text-align: right; font-size: 11px; color: var(--gold); letter-spacing: 2px; font-weight: 800; }
 
-    /* ── LAYOUT ── */
-    main { max-width: 940px; margin: 0 auto; padding: 36px 20px 60px; }
+    main { max-width: 960px; margin: 0 auto; padding: 36px 20px 60px; }
 
-    /* ── CARD ── */
+    .how-banner {
+      background: rgba(0,201,122,.08);
+      border: 1px solid rgba(0,201,122,.3);
+      border-radius: 14px;
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      font-size: 14px;
+      color: #a0f0d0;
+      font-weight: 600;
+      line-height: 1.7;
+    }
+    .how-banner strong { color: var(--green); }
+    .steps { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .step {
+      background: rgba(0,201,122,.12);
+      border: 1px solid rgba(0,201,122,.25);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #7fffc0;
+    }
+
     .card {
       background: var(--card);
-      border: 1px solid rgba(255,215,0,.25);
+      border: 1px solid rgba(255,215,0,.22);
       border-radius: 18px;
       padding: 32px;
       backdrop-filter: blur(8px);
       box-shadow: 0 8px 40px rgba(0,0,0,.35);
+      margin-bottom: 24px;
     }
     .card-title {
       font-family: 'Bebas Neue', sans-serif;
@@ -63,11 +85,11 @@
       margin-bottom: 24px;
     }
 
-    /* ── FORM GRID ── */
     .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-    @media(max-width:600px){ .grid2 { grid-template-columns: 1fr; } }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media(max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
 
-    label.field-label {
+    label.fl {
       display: block;
       font-size: 11px;
       letter-spacing: 1.5px;
@@ -91,22 +113,16 @@
     select:focus, input[type="text"]:focus { border-color: var(--gold); }
     select option { background: #112240; }
 
-    input[type="range"] {
-      width: 100%;
-      margin-top: 8px;
-      accent-color: var(--gold);
-      cursor: pointer;
-    }
-    .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: #445; margin-top: 4px; font-weight: 700; }
+    input[type="range"] { width: 100%; margin-top: 8px; accent-color: var(--gold); cursor: pointer; }
+    .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: #445; margin-top: 3px; font-weight: 800; }
 
-    /* ── PLATFORM PILLS ── */
     .pill-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
     .pill {
-      flex: 1; min-width: 120px;
+      flex: 1; min-width: 110px;
       padding: 12px 10px;
       border-radius: 10px;
       border: 2px solid var(--border);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,.04);
       color: var(--muted);
       font-family: 'Nunito', sans-serif;
       font-size: 13px;
@@ -115,10 +131,9 @@
       text-align: center;
       transition: all .2s;
     }
-    .pill .pill-sub { font-size: 11px; font-weight: 600; opacity: .7; margin-top: 2px; }
+    .pill .ps { font-size: 11px; font-weight: 600; opacity: .7; margin-top: 2px; }
     .pill.active { border-color: var(--gold); background: rgba(255,215,0,.13); color: var(--gold); }
 
-    /* ── GENERATE BUTTON ── */
     #generateBtn {
       width: 100%;
       padding: 17px;
@@ -135,19 +150,7 @@
       transition: transform .15s, box-shadow .15s;
     }
     #generateBtn:hover { transform: translateY(-2px); box-shadow: 0 7px 28px rgba(255,215,0,.5); }
-    #generateBtn:disabled { background: rgba(255,215,0,.25); color: rgba(255,215,0,.5); cursor: not-allowed; transform: none; box-shadow: none; }
 
-    /* ── STATUS / ERROR ── */
-    #statusMsg {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 13px;
-      color: var(--muted);
-      display: none;
-    }
-    #statusMsg.visible { display: block; }
-    #statusMsg .spin { display: inline-block; animation: spin 1s linear infinite; font-size: 22px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
     .error-box {
       background: rgba(255,100,100,.12);
       border: 1px solid #ff6b6b;
@@ -159,181 +162,245 @@
       margin-bottom: 18px;
       display: none;
     }
-    .error-box.visible { display: block; }
+    .error-box.on { display: block; }
 
-    /* ── RESULTS ── */
-    #results { display: none; margin-top: 28px; }
-    #results.visible { display: block; }
+    /* PROMPT OUTPUT */
+    #promptSection { display: none; }
+    #promptSection.on { display: block; }
 
-    .results-header {
-      background: rgba(255,215,0,.1);
-      border: 2px solid rgba(255,215,0,.4);
-      border-radius: 16px;
-      padding: 22px 28px;
+    .out-banner {
+      border-radius: 14px;
+      padding: 18px 24px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 20px;
+      gap: 14px;
     }
-    .results-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--gold); letter-spacing: 2px; }
-    .results-header .meta { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 4px; }
-    .dl-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .out-banner.green { background: rgba(0,201,122,.1); border: 2px solid rgba(0,201,122,.4); }
+    .out-banner.cyan  { background: rgba(0,212,255,.08); border: 2px solid rgba(0,212,255,.35); }
+    .out-banner h2 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; }
+    .out-banner.green h2 { color: var(--green); }
+    .out-banner.cyan  h2 { color: var(--cyan); }
+    .out-banner p { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 4px; }
 
-    .dl-btn {
-      padding: 10px 18px;
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .act-btn {
+      padding: 10px 20px;
       border-radius: 10px;
       font-family: 'Nunito', sans-serif;
       font-size: 13px;
       font-weight: 800;
       cursor: pointer;
-      letter-spacing: .5px;
+      border: 2px solid;
       transition: all .2s;
       white-space: nowrap;
     }
-    .dl-btn:hover { transform: translateY(-1px); }
-    .dl-btn-cyan  { background: rgba(0,212,255,.12); border: 2px solid var(--cyan);   color: var(--cyan); }
-    .dl-btn-orange{ background: rgba(255,107,53,.12); border: 2px solid var(--orange); color: var(--orange); }
-    .dl-btn-ghost { background: transparent; border: 2px solid var(--muted); color: var(--muted); }
+    .act-btn:hover { transform: translateY(-1px); }
+    .btn-green { border-color: var(--green);  background: rgba(0,201,122,.12); color: var(--green); }
+    .btn-ghost { border-color: var(--muted);  background: transparent;         color: var(--muted); }
 
-    /* ── QUESTION LIST ── */
-    #questionList {
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      max-height: 520px;
-      overflow-y: auto;
-    }
-    #questionList h3 { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--gold); margin-bottom: 18px; }
-    .q-card {
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 12px;
-      animation: fadeIn .3s ease;
-    }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
-    .q-text { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 10px; }
-    .q-num  { color: var(--gold); margin-right: 7px; }
-    .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    @media(max-width:480px){ .answers { grid-template-columns: 1fr; } }
-    .ans {
-      padding: 6px 10px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 600;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.07);
+    .tab-bar { display: flex; gap: 4px; border-bottom: 2px solid var(--border); }
+    .tab {
+      padding: 10px 18px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      background: transparent;
       color: var(--muted);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all .2s;
     }
-    .ans.correct {
-      background: rgba(0,255,128,.12);
-      border-color: rgba(0,255,128,.35);
-      color: #7fffb4;
-    }
+    .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .tab-panel { display: none; padding-top: 20px; }
+    .tab-panel.active { display: block; }
 
-    /* ── UPLOAD GUIDES ── */
-    .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
-    @media(max-width:600px){ .guide-grid { grid-template-columns: 1fr; } }
-    .guide-card { border-radius: 12px; padding: 16px; }
-    .guide-card.cyan   { background: rgba(0,212,255,.07); border: 1px solid rgba(0,212,255,.2); }
-    .guide-card.orange { background: rgba(255,107,53,.07); border: 1px solid rgba(255,107,53,.2); }
-    .guide-card h4 { font-size: 13px; font-weight: 800; margin-bottom: 10px; }
-    .guide-card.cyan h4   { color: var(--cyan); }
-    .guide-card.orange h4 { color: var(--orange); }
-    .guide-card ol { padding-left: 18px; color: var(--muted); font-size: 12px; font-weight: 600; line-height: 1.9; }
-
-    /* ── INFO CARDS ── */
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
-    @media(max-width:600px){ .info-grid { grid-template-columns: 1fr; } }
-    .info-card { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
-    .info-card .icon { font-size: 20px; margin-bottom: 6px; }
-    .info-card h4 { font-size: 13px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
-    .info-card p  { font-size: 12px; color: var(--muted); line-height: 1.55; font-weight: 600; }
-
-    /* ── API KEY BANNER ── */
-    #apiSetup {
-      background: rgba(255,215,0,.08);
-      border: 2px solid rgba(255,215,0,.35);
-      border-radius: 14px;
-      padding: 22px 28px;
-      margin-bottom: 28px;
-    }
-    #apiSetup h3 { color: var(--gold); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
-    #apiSetup p  { color: var(--muted); font-size: 13px; font-weight: 600; margin-bottom: 14px; line-height: 1.6; }
-    #apiSetup .key-row { display: flex; gap: 10px; }
-    #apiKeyInput {
-      flex: 1;
-      padding: 11px 14px;
+    .prompt-box {
       background: rgba(0,0,0,.35);
       border: 1px solid var(--border);
-      border-radius: 9px;
-      color: var(--text);
-      font-size: 14px;
+      border-radius: 12px;
+      padding: 20px;
       font-family: monospace;
-      outline: none;
+      font-size: 13px;
+      line-height: 1.75;
+      color: #c8e6ff;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 460px;
+      overflow-y: auto;
     }
-    #apiKeyInput:focus { border-color: var(--gold); }
-    #saveKeyBtn {
-      padding: 11px 22px;
-      background: var(--gold);
-      border: none;
-      border-radius: 9px;
-      color: #0b1a2e;
-      font-weight: 800;
+
+    .fmt-card { border-radius: 12px; padding: 18px; }
+    .fmt-card.cyan   { background: rgba(0,212,255,.07); border: 1px solid rgba(0,212,255,.2); }
+    .fmt-card.orange { background: rgba(255,107,53,.07); border: 1px solid rgba(255,107,53,.2); }
+    .fmt-card h4 { font-size: 14px; font-weight: 800; margin-bottom: 10px; }
+    .fmt-card.cyan h4   { color: var(--cyan); }
+    .fmt-card.orange h4 { color: var(--orange); }
+    .fmt-card p  { font-size: 12px; color: var(--muted); font-weight: 600; line-height: 1.6; margin-bottom: 10px; }
+    .fmt-card ol { padding-left: 18px; color: var(--muted); font-size: 12px; font-weight: 600; line-height: 1.9; }
+    .fmt-sample {
+      background: rgba(0,0,0,.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #a0d0ff;
+      margin-top: 8px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* STEP 2 - CSV SUBMIT */
+    #csvSection { display: none; }
+    #csvSection.on { display: block; }
+
+    .paste-tabs { display: flex; }
+    .paste-tab {
+      flex: 1;
+      padding: 12px 10px;
       font-family: 'Nunito', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 800;
       cursor: pointer;
+      border: 2px solid var(--border);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      text-align: center;
+      transition: all .2s;
     }
-    #keyStatus { font-size: 12px; margin-top: 8px; color: #7fffb4; font-weight: 700; display: none; }
+    .paste-tab:first-child { border-radius: 10px 0 0 10px; }
+    .paste-tab:last-child  { border-radius: 0 10px 10px 0; border-left: none; }
+    .paste-tab.active.gk { background: rgba(0,212,255,.12); border-color: var(--cyan);   color: var(--cyan); }
+    .paste-tab.active.bl { background: rgba(255,107,53,.12); border-color: var(--orange); color: var(--orange); }
+
+    .paste-panel { display: none; padding-top: 18px; }
+    .paste-panel.active { display: block; }
+
+    .fmt-hint {
+      border-radius: 9px;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .fmt-hint.cyan   { background: rgba(0,212,255,.07); border: 1px solid rgba(0,212,255,.2); color: #80d8f0; }
+    .fmt-hint.orange { background: rgba(255,107,53,.07); border: 1px solid rgba(255,107,53,.2); color: #f0b090; }
+    .fmt-hint code { background: rgba(255,255,255,.1); padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+
+    textarea.csv-paste {
+      width: 100%;
+      min-height: 180px;
+      padding: 14px;
+      background: rgba(0,0,0,.3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #c8e6ff;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      resize: vertical;
+      outline: none;
+      transition: border-color .2s;
+    }
+    textarea.csv-paste:focus { border-color: var(--gold); }
+
+    .dl-btn-full {
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+      transition: transform .15s, box-shadow .15s;
+      letter-spacing: .5px;
+    }
+    .dl-btn-full:hover:not(:disabled) { transform: translateY(-2px); }
+    .dl-btn-full:disabled { opacity: .5; cursor: not-allowed; }
+    .dl-gk { background: linear-gradient(135deg, #00b8d9, var(--cyan)); color: #0b1a2e; box-shadow: 0 4px 16px rgba(0,212,255,.35); }
+    .dl-bl { background: linear-gradient(135deg, #e05a28, var(--orange)); color: #fff;    box-shadow: 0 4px 16px rgba(255,107,53,.35); }
+
+    .spinner-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; display: none; }
+    .spinner-row.on { display: flex; }
+    .spinner { font-size: 20px; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-row span { font-size: 13px; color: var(--muted); font-weight: 700; }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width: 600px) { .info-grid { grid-template-columns: 1fr; } }
+    .info-card { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .info-card .ic { font-size: 22px; margin-bottom: 6px; }
+    .info-card h4 { font-size: 13px; font-weight: 800; color: var(--gold); margin-bottom: 4px; }
+    .info-card p  { font-size: 12px; color: var(--muted); line-height: 1.55; font-weight: 600; }
 
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: rgba(255,255,255,.04); }
     ::-webkit-scrollbar-thumb { background: rgba(255,215,0,.3); border-radius: 3px; }
+
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--green); color: #0b1a2e;
+      font-weight: 800; font-size: 14px;
+      padding: 12px 22px; border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,201,122,.5);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s; z-index: 999;
+    }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="emoji">🎮</div>
+  <div class="h-emoji">🎮</div>
   <div>
-    <div class="badge">NC Standards-Aligned</div>
-    <h1>Game Prompt Writer</h1>
-    <div class="sub">Gimkit &amp; Blooket &nbsp;·&nbsp; Grades 6–12 &nbsp;·&nbsp; All Content Areas</div>
+    <div class="h-badge">NC Standards-Aligned</div>
+    <h1>Gimkit &amp; Blooket Quiz Generator</h1>
+    <div class="h-sub">Grades 6–12 &nbsp;·&nbsp; All Content Areas &nbsp;·&nbsp; Mixed Difficulty &nbsp;·&nbsp; Randomized Answers</div>
   </div>
-  <div class="conf">NCTIES CONFERENCE<br><span style="color:#fff;font-size:13px;">Game On! 🎯</span></div>
+  <div class="h-conf">NCTIES CONFERENCE<br><span style="color:#fff;font-size:13px;">Game On! 🎯</span></div>
 </header>
 
 <main>
 
-  <!-- API Key Setup -->
-  <div id="apiSetup">
-    <h3>🔑 Enter Your Anthropic API Key</h3>
-    <p>This tool uses the Claude AI API to generate NC Standards-aligned questions. Your key is stored only in your browser session and never sent anywhere except directly to Anthropic's API.</p>
-    <div class="key-row">
-      <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." autocomplete="off" />
-      <button id="saveKeyBtn" onclick="saveKey()">Save Key</button>
+  <div class="how-banner">
+    <strong>How to use this tool:</strong> Fill out the form and click <strong>Generate Quiz Prompt</strong>. Copy the prompt into <strong>Claude, ChatGPT, or Gemini</strong>. The AI returns a CSV — paste it into <strong>Step 2</strong> and click Download. Your file is ready to upload to Gimkit or Blooket!
+    <div class="steps">
+      <div class="step">1️⃣ Fill the Form</div>
+      <div class="step">2️⃣ Copy &amp; Paste Prompt into AI</div>
+      <div class="step">3️⃣ Copy CSV from AI Response</div>
+      <div class="step">4️⃣ Paste into Step 2 &amp; Download</div>
+      <div class="step">5️⃣ Upload CSV to Gimkit / Blooket</div>
     </div>
-    <div id="keyStatus">✅ API key saved! You can now generate questions.</div>
   </div>
 
-  <!-- Form Card -->
+  <!-- FORM -->
   <div class="card">
-    <div class="card-title">⚙️ Configure Your Game Set</div>
+    <div class="card-title">⚙️ Step 1 — Configure Your Quiz</div>
 
-    <div class="grid2">
+    <div class="grid3">
       <div>
-        <label class="field-label">Grade Level</label>
+        <label class="fl">Grade Level</label>
         <select id="grade">
-          <option>6</option><option>7</option><option selected>8</option>
-          <option>9</option><option>10</option><option>11</option><option>12</option>
+          <option value="6">Grade 6</option>
+          <option value="7">Grade 7</option>
+          <option value="8" selected>Grade 8</option>
+          <option value="9">Grade 9</option>
+          <option value="10">Grade 10</option>
+          <option value="11">Grade 11</option>
+          <option value="12">Grade 12</option>
         </select>
       </div>
       <div>
-        <label class="field-label">Content Area</label>
+        <label class="fl">Content Area</label>
         <select id="subject">
           <option>English Language Arts</option>
           <option>Mathematics</option>
@@ -347,360 +414,415 @@
         </select>
       </div>
       <div>
-        <label class="field-label">Difficulty Level</label>
+        <label class="fl">Overall Difficulty</label>
         <select id="difficulty">
-          <option>Standard</option>
+          <option>Standard – On Level</option>
           <option>Honors / Advanced</option>
-          <option>EOC / EOG Prep</option>
+          <option>EOC / EOG Test Prep</option>
+          <option>Support / Scaffolded</option>
+          <option>Enrichment / Extended Thinking</option>
         </select>
       </div>
+    </div>
+
+    <div class="grid2">
       <div>
-        <label class="field-label">Number of Questions: <span id="countDisplay" style="color:var(--gold)">20</span></label>
-        <input type="range" id="questionCount" min="5" max="40" step="5" value="20"
-          oninput="document.getElementById('countDisplay').textContent=this.value" />
-        <div class="range-labels">
-          <span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span><span>35</span><span>40</span>
-        </div>
+        <label class="fl">NC Standard Number <span style="color:var(--muted);font-size:10px">(optional)</span></label>
+        <input type="text" id="standardNum" placeholder="e.g. 8.H.2.1, NC.M2.G-CO.10, Bio.3.2.1" />
+      </div>
+      <div>
+        <label class="fl">NC Standard Description <span style="color:var(--muted);font-size:10px">(optional)</span></label>
+        <input type="text" id="standardDesc" placeholder="e.g. Explain how European exploration impacted NC" />
       </div>
     </div>
 
     <div style="margin-bottom:20px">
-      <label class="field-label">Topic, Standard, or Unit Focus <span style="color:#ff6b6b">*</span></label>
+      <label class="fl">Topic or Unit Focus <span style="color:#ff6b6b">*</span></label>
       <input type="text" id="topic"
-        placeholder="e.g. NC Standard 8.H.2 – European Exploration, Pythagorean Theorem, Cell Division…" />
+        placeholder="e.g. NC Geography &amp; State Symbols, Pythagorean Theorem, Cell Division…" />
+    </div>
+
+    <div class="grid2" style="margin-bottom:20px">
+      <div>
+        <label class="fl">Number of Questions: <span id="countDisplay" style="color:var(--gold)">20</span></label>
+        <input type="range" id="questionCount" min="5" max="40" step="5" value="20"
+          oninput="document.getElementById('countDisplay').textContent = this.value" />
+        <div class="range-labels">
+          <span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span><span>35</span><span>40</span>
+        </div>
+      </div>
+      <div>
+        <label class="fl">Question Types</label>
+        <select id="qTypes">
+          <option>Mix of recall, application, and analysis</option>
+          <option>Recall / Knowledge only</option>
+          <option>Application / Skill-based only</option>
+          <option>Analysis &amp; Critical Thinking only</option>
+          <option>Vocabulary &amp; Terminology focus</option>
+          <option>Primary Source / Document-based</option>
+        </select>
+      </div>
     </div>
 
     <div style="margin-bottom:28px">
-      <label class="field-label">Export Format</label>
-      <div class="pill-row" id="pillRow">
-        <div class="pill active" data-val="both"    onclick="selectPill(this)">🎮 Both Platforms<div class="pill-sub">Gimkit + Blooket</div></div>
-        <div class="pill"        data-val="gimkit"  onclick="selectPill(this)">⚡ Gimkit Only<div class="pill-sub">4-column CSV</div></div>
-        <div class="pill"        data-val="blooket" onclick="selectPill(this)">📚 Blooket Only<div class="pill-sub">7-column CSV</div></div>
+      <label class="fl">Export Platform</label>
+      <div class="pill-row">
+        <div class="pill active" data-val="both"    onclick="selectPill(this)">🎮 Both Platforms<div class="ps">Gimkit + Blooket</div></div>
+        <div class="pill"        data-val="gimkit"  onclick="selectPill(this)">⚡ Gimkit Only<div class="ps">4-column CSV</div></div>
+        <div class="pill"        data-val="blooket" onclick="selectPill(this)">📚 Blooket Only<div class="ps">7-column CSV</div></div>
       </div>
     </div>
 
     <div class="error-box" id="errorBox"></div>
-
-    <button id="generateBtn" onclick="generate()">✨ Generate Game Questions</button>
-
-    <div id="statusMsg">
-      <div class="spin">⚙️</div>
-      <div id="statusText" style="margin-top:8px"></div>
-      <div style="font-size:11px;color:#445;margin-top:4px">Aligning to NC Standard Course of Study · Building smart distractors · Randomizing answers</div>
-    </div>
+    <button id="generateBtn" onclick="generatePrompt()">✨ Generate Quiz Prompt</button>
   </div>
 
-  <!-- Info Cards -->
-  <div class="info-grid">
-    <div class="info-card"><div class="icon">⚡</div><h4>Gimkit CSV Format</h4><p>Question, Correct Answer, 3 Wrong Answers — import directly in Gimkit's "Import Questions" feature.</p></div>
-    <div class="info-card"><div class="icon">📚</div><h4>Blooket CSV Format</h4><p>Question with 4 shuffled answers and correct position marked — perfect for Blooket's question import.</p></div>
-    <div class="info-card"><div class="icon">🎲</div><h4>Randomized Answers</h4><p>All answer choices are automatically shuffled so correct answers appear in varied positions every time.</p></div>
-    <div class="info-card"><div class="icon">🎯</div><h4>NC Standards Aligned</h4><p>Every question is crafted to the NC Standard Course of Study for your selected grade and content area.</p></div>
-  </div>
-
-  <!-- Results -->
-  <div id="results">
-    <div class="results-header">
+  <!-- STEP 1 OUTPUT -->
+  <div id="promptSection">
+    <div class="out-banner green">
       <div>
-        <h2 id="resultsTitle">✅ 0 Questions Generated!</h2>
-        <div class="meta" id="resultsMeta"></div>
+        <h2>✅ Step 1 Complete — Prompt Ready!</h2>
+        <p id="promptMeta"></p>
       </div>
-      <div class="dl-row" id="dlButtons"></div>
+      <div class="btn-row">
+        <button class="act-btn btn-green" onclick="copyPrompt()">📋 Copy Prompt</button>
+        <button class="act-btn btn-ghost"  onclick="resetAll()">🔄 Start Over</button>
+      </div>
     </div>
-    <div id="questionList"><h3>📋 Question Preview</h3></div>
-    <div class="guide-grid" id="guideGrid"></div>
+
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div style="padding:20px 24px 0;">
+        <p style="font-size:13px; color:var(--muted); font-weight:600; margin-bottom:14px;">
+          👇 Copy this prompt → paste into <strong style="color:var(--text)">Claude.ai, ChatGPT, or Gemini</strong> → copy the CSV it returns → paste into <strong style="color:var(--text)">Step 2 below</strong>.
+        </p>
+        <div class="tab-bar">
+          <button class="tab active" onclick="switchTab('prompt', this)">📝 AI Prompt</button>
+          <button class="tab" onclick="switchTab('gk-guide', this)">⚡ Gimkit Format</button>
+          <button class="tab" onclick="switchTab('bl-guide', this)">📚 Blooket Format</button>
+        </div>
+      </div>
+      <div style="padding:0 24px 24px;">
+        <div id="tab-prompt" class="tab-panel active">
+          <div class="prompt-box" id="promptOutput"></div>
+        </div>
+        <div id="tab-gk-guide" class="tab-panel">
+          <div class="fmt-card cyan">
+            <h4>⚡ Gimkit — Expected CSV Output</h4>
+            <p>5 columns. Correct answer in "Answer" column. Distractors randomized across the three Incorrect columns.</p>
+            <div class="fmt-sample">"Question","Answer","Incorrect Answer 1","Incorrect Answer 2","Incorrect Answer 3"
+"[L1] What is NC's state bird?","Cardinal","Blue Jay","Mockingbird","Robin"
+"[L2] How did the Blue Ridge Mtns affect early NC settlement?","They slowed westward migration by creating natural barriers","They had the richest farmland","They were closest to the coast","They had the most navigable rivers"
+"[L3] Evaluate why NC's Piedmont grew faster than the Coastal Plain after 1800.","Industrial rivers powered textile mills attracting workers","The soil was too poor for farming","Colonial charters excluded the coast","Settlers preferred cooler temperatures"</div>
+          </div>
+        </div>
+        <div id="tab-bl-guide" class="tab-panel">
+          <div class="fmt-card orange">
+            <h4>📚 Blooket — Expected CSV Output</h4>
+            <p>7 columns. All 4 answers shuffled randomly. Last column is the number (1–4) of the correct answer column.</p>
+            <div class="fmt-sample">"Question Text","Answer 1","Answer 2","Answer 3","Answer 4","Time Limit (sec)","Correct Answer(s)"
+"[L1] What is NC's state bird?","Blue Jay","Robin","Mockingbird","Cardinal","20","4"
+"[L2] How did the Blue Ridge Mtns affect early NC settlement?","Had the most navigable rivers","Richest farmland","Slowed westward migration by creating natural barriers","Closest to the coast","20","3"
+"[L3] Evaluate why NC's Piedmont grew faster than the Coastal Plain after 1800.","Soil was too poor","Industrial rivers powered textile mills attracting workers","Colonial charters excluded coast","Settlers preferred cooler temps","20","2"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: PASTE & DOWNLOAD -->
+  <div id="csvSection">
+    <div class="out-banner cyan">
+      <div>
+        <h2>📥 Step 2 — Paste CSV &amp; Download</h2>
+        <p>Paste the CSV the AI returned, then click Download. File saves directly to your computer, ready to upload to Gimkit or Blooket.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="paste-tabs">
+        <div class="paste-tab active gk" data-panel="gk" onclick="switchPasteTab(this)">⚡ Gimkit CSV</div>
+        <div class="paste-tab bl"        data-panel="bl" onclick="switchPasteTab(this)">📚 Blooket CSV</div>
+      </div>
+
+      <!-- GIMKIT -->
+      <div class="paste-panel active" id="panel-gk">
+        <div class="fmt-hint cyan">
+          Paste the <strong>Gimkit CSV block</strong> from the AI's response (include the header row).<br>
+          Columns: <code>"Question"</code> · <code>"Answer"</code> · <code>"Incorrect Answer 1"</code> · <code>"Incorrect Answer 2"</code> · <code>"Incorrect Answer 3"</code>
+        </div>
+        <textarea class="csv-paste" id="gimkitPaste"
+          placeholder='"Question","Answer","Incorrect Answer 1","Incorrect Answer 2","Incorrect Answer 3"&#10;"[L1] Sample question?","Correct answer","Wrong 1","Wrong 2","Wrong 3"&#10;…paste full CSV here…'></textarea>
+        <button class="dl-btn-full dl-gk" id="dlGkBtn" onclick="downloadDirect('gimkit')">⚡ Download Gimkit CSV</button>
+        <div class="spinner-row" id="spinner-gk">
+          <div class="spinner">⚙️</div>
+          <span>Processing your CSV…</span>
+        </div>
+      </div>
+
+      <!-- BLOOKET -->
+      <div class="paste-panel" id="panel-bl">
+        <div class="fmt-hint orange">
+          Paste the <strong>Blooket CSV block</strong> from the AI's response (include the header row).<br>
+          Columns: <code>"Question Text"</code> · <code>"Answer 1–4"</code> · <code>"Time Limit (sec)"</code> · <code>"Correct Answer(s)"</code>
+        </div>
+        <textarea class="csv-paste" id="blooketPaste"
+          placeholder='"Question Text","Answer 1","Answer 2","Answer 3","Answer 4","Time Limit (sec)","Correct Answer(s)"&#10;"[L1] Sample question?","Wrong 1","Correct answer","Wrong 2","Wrong 3","20","2"&#10;…paste full CSV here…'></textarea>
+        <button class="dl-btn-full dl-bl" id="dlBlBtn" onclick="downloadDirect('blooket')">📚 Download Blooket CSV</button>
+        <div class="spinner-row" id="spinner-bl">
+          <div class="spinner">⚙️</div>
+          <span>Processing your CSV…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="card">
+    <div class="card-title">ℹ️ About This Tool</div>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="ic">🎯</div>
+        <h4>NC Standards Aligned</h4>
+        <p>Every prompt is built around the NC Standard Course of Study for your selected grade and content area, including optional standard number and description.</p>
+      </div>
+      <div class="info-card">
+        <div class="ic">📊</div>
+        <h4>Mixed Difficulty Levels</h4>
+        <p>Questions are automatically spread across ~40% Recall (L1), ~40% Application (L2), and ~20% Analysis (L3) — each labeled in the question text.</p>
+      </div>
+      <div class="info-card">
+        <div class="ic">🎲</div>
+        <h4>Randomized Answers</h4>
+        <p>The AI is instructed to shuffle answer positions so the correct answer never always appears in the same column.</p>
+      </div>
+      <div class="info-card">
+        <div class="ic">📥</div>
+        <h4>Instant CSV Download</h4>
+        <p>Paste the AI's CSV output and download a properly named .csv file — the only format accepted for bulk import by Gimkit and Blooket.</p>
+      </div>
+    </div>
   </div>
 
 </main>
 
+<div class="toast" id="toast"></div>
+
 <script>
-  // ── STATE ──────────────────────────────────────────────
-  let apiKey = '';
-  let generatedQuestions = [];
+  // ── Replace this with your deployed Apps Script Web App URL ──
+  const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
   let selectedPlatform = 'both';
-  let currentMeta = {};
 
-  // ── API KEY ────────────────────────────────────────────
-  function saveKey() {
-    const val = document.getElementById('apiKeyInput').value.trim();
-    if (!val.startsWith('sk-ant')) {
-      showError('That does not look like a valid Anthropic API key (should start with sk-ant).');
-      return;
-    }
-    apiKey = val;
-    document.getElementById('keyStatus').style.display = 'block';
-    document.getElementById('keyStatus').textContent = '✅ API key saved! You can now generate questions.';
-  }
-
-  // ── PLATFORM PILLS ────────────────────────────────────
   function selectPill(el) {
     document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
     el.classList.add('active');
     selectedPlatform = el.dataset.val;
   }
 
-  // ── HELPERS ───────────────────────────────────────────
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+
+  function switchPasteTab(el) {
+    document.querySelectorAll('.paste-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.paste-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + el.dataset.panel).classList.add('active');
+  }
+
+  function showToast(msg, duration) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration || 2600);
   }
 
   function showError(msg) {
     const el = document.getElementById('errorBox');
     el.textContent = '⚠️ ' + msg;
-    el.classList.add('visible');
+    el.classList.add('on');
   }
-  function clearError() {
-    const el = document.getElementById('errorBox');
-    el.textContent = '';
-    el.classList.remove('visible');
-  }
+  function clearError() { document.getElementById('errorBox').classList.remove('on'); }
 
-  function setLoading(on, text) {
-    const btn = document.getElementById('generateBtn');
-    const msg = document.getElementById('statusMsg');
-    btn.disabled = on;
-    msg.classList.toggle('visible', on);
-    if (text) document.getElementById('statusText').textContent = text;
+  function copyPrompt() {
+    navigator.clipboard.writeText(document.getElementById('promptOutput').textContent)
+      .then(() => showToast('📋 Prompt copied! Now paste it into your AI tool.'));
   }
 
-  // ── PARSE ─────────────────────────────────────────────
-  function parseQuestions(text) {
-    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-    const questions = [];
-    let cur = null;
-    for (const line of lines) {
-      const qm = line.match(/^\d+[\.\)]\s+(.+)/);
-      const am = line.match(/^(?:Answer|Correct Answer):\s*(.+)/i);
-      const wm = line.match(/^(?:Wrong\d?|Incorrect\d?|Distractor\d?):\s*(.+)/i);
-      if (qm) {
-        if (cur) questions.push(cur);
-        cur = { question: qm[1], correct: '', wrong: [] };
-      } else if (am && cur) {
-        cur.correct = am[1];
-      } else if (wm && cur) {
-        cur.wrong.push(wm[1]);
-      }
-    }
-    if (cur) questions.push(cur);
-    return questions.filter(q => q.question && q.correct && q.wrong.length >= 3);
+  function resetAll() {
+    document.getElementById('promptSection').classList.remove('on');
+    document.getElementById('csvSection').classList.remove('on');
+    document.getElementById('gimkitPaste').value = '';
+    document.getElementById('blooketPaste').value = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── CSV EXPORT ────────────────────────────────────────
-  function esc(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }
+  // ── DIRECT BROWSER DOWNLOAD (no Apps Script needed) ──────────
+  // This works immediately. Apps Script adds Google Sheet logging as a bonus.
+  function downloadDirect(platform) {
+    const id  = platform === 'gimkit' ? 'gimkitPaste' : 'blooketPaste';
+    const raw = document.getElementById(id).value.trim();
+    if (!raw) { showToast('⚠️ Please paste the CSV from the AI first!'); return; }
 
-  function makeGimkitCSV(questions) {
-    const rows = ['Question,Answer,"Incorrect Answer 1","Incorrect Answer 2","Incorrect Answer 3"'];
-    for (const q of questions) {
-      const w = shuffle(q.wrong).slice(0, 3);
-      while (w.length < 3) w.push('N/A');
-      rows.push([q.question, q.correct, w[0], w[1], w[2]].map(esc).join(','));
-    }
-    return rows.join('\n');
-  }
+    const grade   = document.getElementById('grade').value;
+    const subject = document.getElementById('subject').value.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 20);
+    const topic   = document.getElementById('topic').value.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 25);
+    const filename = `NC_${subject}_Gr${grade}_${topic}_${platform}.csv`;
 
-  function makeBlooketCSV(questions) {
-    const rows = ['"Question Text","Answer 1","Answer 2","Answer 3","Answer 4","Time Limit (sec)","Correct Answer(s)"'];
-    for (const q of questions) {
-      const w = shuffle(q.wrong).slice(0, 3);
-      const all = shuffle([q.correct, w[0], w[1], w[2]]);
-      const correctPos = all.indexOf(q.correct) + 1;
-      rows.push([q.question, all[0], all[1], all[2], all[3], '20', correctPos].map(esc).join(','));
-    }
-    return rows.join('\n');
-  }
-
-  function downloadCSV(content, filename) {
-    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    // Download directly in browser
+    const blob = new Blob([raw], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
     a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
+
+    showToast('✅ ' + (platform === 'gimkit' ? 'Gimkit' : 'Blooket') + ' CSV downloaded!');
+
+    // Also log to Google Sheet if Apps Script is configured
+    if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+      const grade   = document.getElementById('grade').value;
+      const subject = document.getElementById('subject').value;
+      const topic   = document.getElementById('topic').value;
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ platform, grade, subject, topic, csvData: raw }),
+      }).catch(() => {}); // silent — download already happened
+    }
   }
 
-  function safeName(s) { return s.replace(/[^a-zA-Z0-9]/g, '_').slice(0, 30); }
-
-  // ── RENDER RESULTS ────────────────────────────────────
-  function renderResults(questions, meta) {
-    document.getElementById('resultsTitle').textContent =
-      '✅ ' + questions.length + ' Questions Generated!';
-    document.getElementById('resultsMeta').textContent =
-      'Grade ' + meta.grade + ' · ' + meta.subject + ' · ' + meta.topic + ' · ' + meta.difficulty;
-
-    // Download buttons
-    const dlRow = document.getElementById('dlButtons');
-    dlRow.innerHTML = '';
-    if (selectedPlatform === 'both' || selectedPlatform === 'gimkit') {
-      const b = document.createElement('button');
-      b.className = 'dl-btn dl-btn-cyan';
-      b.textContent = '⚡ Download Gimkit CSV';
-      b.onclick = () => downloadCSV(makeGimkitCSV(questions),
-        'NC_' + safeName(meta.subject) + '_Gr' + meta.grade + '_' + safeName(meta.topic) + '_gimkit.csv');
-      dlRow.appendChild(b);
-    }
-    if (selectedPlatform === 'both' || selectedPlatform === 'blooket') {
-      const b = document.createElement('button');
-      b.className = 'dl-btn dl-btn-orange';
-      b.textContent = '📚 Download Blooket CSV';
-      b.onclick = () => downloadCSV(makeBlooketCSV(questions),
-        'NC_' + safeName(meta.subject) + '_Gr' + meta.grade + '_' + safeName(meta.topic) + '_blooket.csv');
-      dlRow.appendChild(b);
-    }
-    const newBtn = document.createElement('button');
-    newBtn.className = 'dl-btn dl-btn-ghost';
-    newBtn.textContent = '🔄 New Set';
-    newBtn.onclick = () => {
-      document.getElementById('results').classList.remove('visible');
-      generatedQuestions = [];
-    };
-    dlRow.appendChild(newBtn);
-
-    // Question cards
-    const list = document.getElementById('questionList');
-    list.innerHTML = '<h3>📋 Question Preview</h3>';
-    questions.forEach((q, i) => {
-      const all = shuffle([q.correct, ...q.wrong.slice(0, 3)]);
-      const labels = ['A', 'B', 'C', 'D'];
-      const card = document.createElement('div');
-      card.className = 'q-card';
-      card.innerHTML = `
-        <div class="q-text"><span class="q-num">${i + 1}.</span>${q.question}</div>
-        <div class="answers">
-          ${all.map((ans, ai) =>
-            `<div class="ans${ans === q.correct ? ' correct' : ''}">
-              ${labels[ai]}. ${ans}${ans === q.correct ? ' ✓' : ''}
-            </div>`
-          ).join('')}
-        </div>`;
-      list.appendChild(card);
-    });
-
-    // Upload guides
-    const guideGrid = document.getElementById('guideGrid');
-    guideGrid.innerHTML = '';
-    if (selectedPlatform === 'both' || selectedPlatform === 'gimkit') {
-      guideGrid.innerHTML += `
-        <div class="guide-card cyan">
-          <h4>⚡ Upload to Gimkit</h4>
-          <ol>
-            <li>Go to gimkit.com → Create Kit</li>
-            <li>Click "Import" → "CSV"</li>
-            <li>Upload your Gimkit CSV file</li>
-            <li>Map columns if prompted → Import!</li>
-          </ol>
-        </div>`;
-    }
-    if (selectedPlatform === 'both' || selectedPlatform === 'blooket') {
-      guideGrid.innerHTML += `
-        <div class="guide-card orange">
-          <h4>📚 Upload to Blooket</h4>
-          <ol>
-            <li>Go to blooket.com → Create Set</li>
-            <li>Click "Import" → select CSV file</li>
-            <li>Upload your Blooket CSV file</li>
-            <li>Preview questions → Save Set!</li>
-          </ol>
-        </div>`;
-    }
-
-    document.getElementById('results').classList.add('visible');
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-  }
-
-  // ── GENERATE ──────────────────────────────────────────
-  const STANDARDS_CONTEXT = {
-    'English Language Arts': 'NC ELA Essential Standards: reading literature, informational text, writing, speaking & listening, language standards aligned to NC Standard Course of Study.',
-    'Mathematics': 'NC Mathematics Standard Course of Study: Number & Quantity, Algebra, Functions, Geometry, Statistics & Probability for middle and high school.',
-    'Science': 'NC Essential Science Standards: Earth & Environmental Science, Biology, Chemistry, Physics, Physical Science aligned to NC Standard Course of Study.',
-    'Social Studies': 'NC Essential Standards for Social Studies: NC History, American History, World History, Civics & Economics, Geography.',
-    'Health & PE': 'NC Essential Standards for Health and PE: Healthful Living, movement competency, personal/community health.',
-    'Arts Education': 'NC Essential Standards for Arts Education: Visual Arts, Music, Theater Arts, and Dance.',
-    'Computer Science & Digital Literacy': 'NC Essential Standards for CS and Digital Learning: computational thinking, programming concepts, digital citizenship.',
-    'World Languages': 'NC Essential Standards for World Languages aligned to ACTFL proficiency levels: interpretive, interpersonal, presentational communication.',
-    'Career & Technical Education': 'NC CTE Standards covering pathways: Business & Finance, Health Science, STEM, Arts & Communications, and more.',
+  // ── STANDARDS CONTEXT ─────────────────────────────────────────
+  const STANDARDS = {
+    'English Language Arts':               'NC ELA Essential Standards: reading literature, reading informational text, writing, speaking & listening, and language conventions.',
+    'Mathematics':                         'NC Mathematics Standard Course of Study: Number & Quantity, Algebra, Functions, Geometry, Statistics & Probability.',
+    'Science':                             'NC Essential Science Standards: Earth & Environmental Science, Biology, Chemistry, Physics, Physical Science.',
+    'Social Studies':                      'NC Essential Standards for Social Studies: NC History, American History, World History, Civics & Economics, Geography.',
+    'Health & PE':                         'NC Essential Standards for Health and PE: Healthful Living, movement competency, personal and community health.',
+    'Arts Education':                      'NC Essential Standards for Arts Education: Visual Arts, Music, Theater Arts, Dance.',
+    'Computer Science & Digital Literacy': 'NC Essential Standards for CS and Digital Learning: computational thinking, programming, digital citizenship.',
+    'World Languages':                     'NC Essential Standards for World Languages aligned to ACTFL: interpretive, interpersonal, presentational communication.',
+    'Career & Technical Education':        'NC CTE Standards: Business & Finance, Health Science, STEM, Arts & Communications, and more.',
   };
 
-  async function generate() {
+  function buildFormat(count) {
+    const l1 = Math.round(count * 0.40);
+    const l3 = Math.round(count * 0.20);
+    const l2 = count - l1 - l3;
+
+    const gimkit = `=== GIMKIT CSV ===
+Return a CSV block with EXACTLY these 5 columns (include the header row):
+"Question","Answer","Incorrect Answer 1","Incorrect Answer 2","Incorrect Answer 3"
+- Wrap every cell in double quotes
+- Correct answer in the "Answer" column
+- 3 plausible distractors in the Incorrect Answer columns
+- RANDOMIZE which distractor appears in which Incorrect column — vary this across every question
+- Output ONLY the CSV block — no extra text, no explanations, no row numbers`;
+
+    const blooket = `=== BLOOKET CSV ===
+Return a CSV block with EXACTLY these 7 columns (include the header row):
+"Question Text","Answer 1","Answer 2","Answer 3","Answer 4","Time Limit (sec)","Correct Answer(s)"
+- Wrap every cell in double quotes
+- SHUFFLE the correct answer and 3 distractors randomly across Answer 1–4 columns
+- "Correct Answer(s)" = the NUMBER (1, 2, 3, or 4) of the column containing the correct answer
+- VARY the correct answer position across questions — do NOT always place it in column 1
+- Set Time Limit to 20 for every question
+- Output ONLY the CSV block — no extra text, no explanations, no row numbers`;
+
+    const formatBlock =
+      selectedPlatform === 'both'   ? `Return TWO labeled CSV blocks:\n\n${gimkit}\n\n${blooket}` :
+      selectedPlatform === 'gimkit' ? gimkit : blooket;
+
+    return { formatBlock, l1, l2, l3 };
+  }
+
+  function generatePrompt() {
     clearError();
+
     const grade   = document.getElementById('grade').value;
     const subject = document.getElementById('subject').value;
+    const stdNum  = document.getElementById('standardNum').value.trim();
+    const stdDesc = document.getElementById('standardDesc').value.trim();
     const topic   = document.getElementById('topic').value.trim();
     const diff    = document.getElementById('difficulty').value;
-    const count   = document.getElementById('questionCount').value;
+    const count   = parseInt(document.getElementById('questionCount').value);
+    const qTypes  = document.getElementById('qTypes').value;
 
-    if (!apiKey) { showError('Please enter and save your Anthropic API key above first.'); return; }
-    if (!topic)  { showError('Please enter a topic or standard to focus on.'); return; }
+    if (!topic) { showError('Please enter a topic or unit focus.'); return; }
 
-    setLoading(true, `Creating ${count} questions for Grade ${grade} ${subject}…`);
-    document.getElementById('results').classList.remove('visible');
+    const stdLine = (stdNum || stdDesc)
+      ? `\n- NC Standard: ${stdNum ? stdNum + ' – ' : ''}${stdDesc}` : '';
 
-    const prompt = `You are an expert NC educator creating quiz questions aligned to the NC Standard Course of Study.
+    const platformLabel =
+      selectedPlatform === 'both'   ? 'Gimkit AND Blooket' :
+      selectedPlatform === 'gimkit' ? 'Gimkit' : 'Blooket';
 
-Generate exactly ${count} multiple-choice questions for:
-- Grade: ${grade}
-- Subject: ${subject}
-- Topic/Standard Focus: ${topic}
-- Difficulty: ${diff}
-- Standards Context: ${STANDARDS_CONTEXT[subject] || 'NC Standard Course of Study'}
+    const { formatBlock, l1, l2, l3 } = buildFormat(count);
 
-REQUIREMENTS:
-- Questions must be clearly aligned to NC standards
-- Mix of recall, application, and analysis questions
-- Each question needs 1 correct answer and exactly 3 plausible distractors (realistic misconceptions, NOT obviously wrong)
-- Use age-appropriate language for grade ${grade}
-- Calibrate rigor for ${diff} level
+    const prompt =
+`You are an expert North Carolina educator and curriculum specialist. Generate exactly ${count} multiple-choice quiz questions for ${platformLabel}, fully aligned to the NC Standard Course of Study.
 
-FORMAT EVERY QUESTION EXACTLY LIKE THIS with no extra commentary:
-1. [Question text]
-Answer: [Correct answer]
-Wrong1: [Plausible distractor]
-Wrong2: [Plausible distractor]
-Wrong3: [Plausible distractor]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUIZ SPECIFICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Grade Level: ${grade}
+- Content Area: ${subject}${stdLine}
+- Topic / Unit Focus: ${topic}
+- Overall Difficulty: ${diff}
+- Question Types: ${qTypes}
+- Standards Context: ${STANDARDS[subject] || 'NC Standard Course of Study'}
 
-Continue this exact format for all ${count} questions.`;
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MIXED DIFFICULTY — REQUIRED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Distribute all ${count} questions across three Bloom's Taxonomy levels:
+  • ${l1} questions labeled [L1] — Recall / Knowledge
+    (define, identify, name, list, recall basic facts)
+  • ${l2} questions labeled [L2] — Application / Comprehension
+    (explain, compare, apply, classify, interpret)
+  • ${l3} questions labeled [L3] — Analysis / Evaluation
+    (analyze, evaluate, justify, synthesize, draw conclusions)
 
-    try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-opus-4-5',
-          max_tokens: 8000,
-          messages: [{ role: 'user', content: prompt }],
-        }),
-      });
+Begin EVERY question with its level tag: [L1], [L2], or [L3]
 
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({}));
-        throw new Error(err.error?.message || 'API request failed (status ' + resp.status + ')');
-      }
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUESTION QUALITY RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Every question must align to NC Standard Course of Study for Grade ${grade} ${subject}
+- Each question needs exactly 1 correct answer and 3 plausible distractors
+- Distractors must reflect REALISTIC student misconceptions — never obviously wrong
+- Use vocabulary appropriate for Grade ${grade} students
+- Vary question stems — do NOT begin every question with "What is…"
+- No repeated questions, no trick questions, no ambiguous wording
 
-      const data = await resp.json();
-      const text = (data.content || []).map(c => c.text || '').join('\n');
-      const questions = parseQuestions(text);
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${formatBlock}
 
-      if (questions.length === 0) {
-        throw new Error('Could not parse questions from the AI response. Please try again.');
-      }
+Generate all ${count} questions now for:
+Grade ${grade} · ${subject} · Topic: "${topic}"`;
 
-      generatedQuestions = questions;
-      currentMeta = { grade, subject, topic, difficulty: diff };
-      renderResults(questions, currentMeta);
+    document.getElementById('promptOutput').textContent = prompt;
+    document.getElementById('promptMeta').textContent =
+      `Grade ${grade} · ${subject} · ${topic} · ${count} questions (${l1} Recall / ${l2} Application / ${l3} Analysis) · ${diff}`;
 
-    } catch (err) {
-      showError(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
+    document.getElementById('promptSection').classList.add('on');
+    document.getElementById('csvSection').classList.add('on');
+
+    // Auto-select correct paste tab
+    document.querySelectorAll('.paste-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.paste-panel').forEach(p => p.classList.remove('active'));
+    if (selectedPlatform === 'blooket') {
+      document.querySelector('.paste-tab.bl').classList.add('active');
+      document.getElementById('panel-bl').classList.add('active');
+    } else {
+      document.querySelector('.paste-tab.gk').classList.add('active');
+      document.getElementById('panel-gk').classList.add('active');
     }
+
+    document.getElementById('promptSection').scrollIntoView({ behavior: 'smooth' });
   }
 </script>
 </body>
